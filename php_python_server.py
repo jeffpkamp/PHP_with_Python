@@ -8,32 +8,38 @@ import sys
 
 
 
-def execute(conn,dill,sys):
+def execute(conn,dill,sys,traceback):
 	try:
 		import time
 		commands=conn.recv(2**24)
+		print "\n",commands,"\n"
 		file2=conn.makefile('w',0)
 		old=sys.stdout
 		sys.stdout=file2
 		exec(commands)
 		sys.stdout=old
 		try:conn.shutdown(1)
-		except Exception as e: print e
+		except: pass
 		file2.close()
 		conn.close()
 		#print "conn is closed",conn
 		return
 	except Exception as e:
-		sys.stdout=old
-		print "ERROR CLOSED",e
-		traceback.print_exc();
+		print "ERROR:"
+		print traceback.format_exc()
 		try:conn.shutdown(1)
-		except:print "Shutdown Failed"
+		except: pass
+		sys.stdout=old
 		file2.close()
 		conn.close()
-		print "ENDING with ERROR!"
+		print "Error"
 		return
 
+
+def cleanup():
+	cleanup.called=1
+
+cleanup.called=0
 
 try:
 	if (len(sys.argv)>1):
@@ -41,15 +47,15 @@ try:
 	else:
 		port=45555
 	s=socket.socket()
-	print "ready on",port
+	print "PhP python listening on",port
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 	s.bind(('',port))
 	s.listen(5)
 
 	while True:
-		conn,addr=s.accept();
+		conn,addr=s.accept()
 		print "Connection from",addr
-		p=mp.Process(target=execute,args=(conn,dill,sys))
+		p=mp.Process(target=execute,args=(conn,dill,sys,traceback))
 		p.start()
 
 except:
