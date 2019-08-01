@@ -17,7 +17,7 @@ The $return argument defaults to false.   When false the stdout of the python co
 
 the $port argument is the port that php_python_server.py program is listening on.  This defaults to port 45555, just because.  If the socket fails to connect it will run the much slower py_serial() function.  if it connects it will run the much faster py_socket() function.  The execution time difference is about 15x, depending on how much information is passed between each instance of the functions.  
 
-#Troubleshooting
+# Troubleshooting
 
 The code will likely need some tweaking to run on your sever.  One thing that will likely need changing is the path to where dill saves its sessions, unless you are running this on a raspberry pi.  If you have any issues check the permissions!  If you start the php_python_server.py program with your user account, it will execute with your privileges, while the py() function will execute with apache's privileges.  
 
