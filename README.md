@@ -22,10 +22,12 @@ the $port argument is the port that php_python_server.py program is listening on
 The code will likely need some tweaking to run on your sever.  One thing that will likely need changing is the path to where dill saves its sessions, unless you are running this on a raspberry pi.  If you have any issues check the permissions!  If you start the php_python_server.py program with your user account, it will execute with your privileges, while the py() function will execute with apache's privileges.  
 
 
-EXAMPLE: php code
+# EXAMPLE PHP code
 
+	<html>
+	
 	<?php
-	include "~/bin/php_python_client.php";
+	include "PATHTO/php_python_client.php";
 	py(<<<p
 	print "hello world"
 	k=100
@@ -36,7 +38,7 @@ EXAMPLE: php code
 	p
 	);?>
 
-	<html> Python ran up above!"
+	Python ran up above!"
 
 	<?php
 	py(<<<p
@@ -48,3 +50,15 @@ EXAMPLE: php code
 	p
 	);?>
 	</html>
+	<script>
+	py(<<<p
+	import json
+	dict={}
+	dict['dog_food']=100
+	dict['cat_food']="Meow_mix"
+	dict['numbers']=range(10)
+	print "my_object="+str(dict)
+	p
+	);
+	console.log(my_object);
+	</script>
